@@ -23,7 +23,6 @@ export class GameScene extends Phaser.Scene {
   private scoreText!: Phaser.GameObjects.Text
   private score = 0
   private timeSinceLastJump = Infinity
-  private music!: Phaser.Sound.BaseSound
   private gameOver = false
 
   constructor() {
@@ -55,10 +54,6 @@ export class GameScene extends Phaser.Scene {
       fontSize: '28px',
       color: '#ffffff',
     }).setOrigin(0.5).setDepth(3)
-
-    // --- Música ---
-    this.music = this.sound.add('music', { loop: true })
-    this.music.play()
 
     // --- Input: clic y barra espaciadora ---
     this.input.on('pointerdown', this.handleJump, this)
@@ -192,7 +187,6 @@ export class GameScene extends Phaser.Scene {
   private handleLose() {
     this.gameOver = true
     this.pipeTimer.remove()
-    this.music.stop()
 
     // Delay de 100ms antes de volver al menú — igual que el setTimeout original
     this.time.delayedCall(100, () => {
@@ -204,6 +198,5 @@ export class GameScene extends Phaser.Scene {
   shutdown() {
     this.input.off('pointerdown', this.handleJump, this)
     this.input.keyboard?.off('keydown-SPACE', this.handleJump, this)
-    if (this.music?.isPlaying) this.music.stop()
   }
 }

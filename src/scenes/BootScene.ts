@@ -14,7 +14,6 @@ export class BootScene extends Phaser.Scene {
     this.load.image('background', '/img/bg.jpeg')
     this.load.image('bird', '/img/bird.jpeg')
     this.load.image('pipe', '/img/pipe.jpeg')
-    this.load.audio('music', 'https://pgm-apps.com/julio/js/games/flappy_bird/resource/sound/game_theme.mp3')
   }
 
   create() {

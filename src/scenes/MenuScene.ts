@@ -143,6 +143,6 @@ export class MenuScene extends Phaser.Scene {
 
     button.on('pointerover', () => button.setStyle({ backgroundColor: '#cf2bd5' }))
     button.on('pointerout', () => button.setStyle({ backgroundColor: '#7d07cc' }))
-    button.on('pointerdown', () => this.scene.start('GameScene'))
+    button.on('pointerdown', () => this.scene.start('WorldScene'))
   }
 }

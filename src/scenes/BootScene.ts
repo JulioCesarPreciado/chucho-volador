@@ -11,7 +11,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('background', '/img/bg.jpeg')
+    this.load.image('background', '/img/bg.png')
     this.load.image('bird', '/img/bird.jpeg')
     this.load.image('pipe', '/img/pipe.jpeg')
   }

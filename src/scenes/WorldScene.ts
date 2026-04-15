@@ -15,60 +15,30 @@ export class WorldScene extends Phaser.Scene {
     super({ key: 'WorldScene' })
   }
 
-  // ─── Crear texturas procedurales ──────────────────────────────────────────
-  // Mientras no haya sprites definitivos, generamos colores sólidos en memoria.
-  // Fácil de reemplazar con sprites reales en fases futuras.
+  // ─── Crear texturas procedurales de nivel ────────────────────────────────
+  // Solo queda el tile blanco base para las plataformas.
+  // Los sprites del jugador vienen de player.png / waiting.png (cargados en BootScene).
 
   private createTextures() {
-    // Pixel blanco base — se tinta por plataforma
-    // Usamos add.graphics() y destroy() para generar la textura sin dejarla en escena
+    if (this.textures.exists('tile')) return  // evita regenerar al reiniciar escena
     const gfx = this.add.graphics()
     gfx.fillStyle(0xffffff)
     gfx.fillRect(0, 0, TILE_SIZE, TILE_SIZE)
     gfx.generateTexture('tile', TILE_SIZE, TILE_SIZE)
     gfx.destroy()
+  }
 
-    // Placeholder del gato — capas de detalle sobre sprite 32x48
-    const cat = this.add.graphics()
+  // ─── Registrar animaciones ────────────────────────────────────────────────
+  private createAnimations() {
+    if (this.anims.exists('waiting')) return  // evita duplicados al reiniciar escena
 
-    // Capa 1: cuerpo y cabeza — gris oscuro
-    cat.fillStyle(0x484744)
-    cat.fillRect(2, 8, 28, 38)                    // cuerpo principal
-
-    // Capa 2: orejas externas — misma tonalidad gris
-    cat.fillStyle(0x484744)
-    cat.fillTriangle(2, 10,  12, 10,  7, 0)       // oreja izquierda
-    cat.fillTriangle(20, 10, 30, 10, 25, 0)       // oreja derecha
-
-    // Capa 3: interior de orejas — blanco cremoso
-    cat.fillStyle(0xfff0f0)
-    cat.fillTriangle(4, 9,   10, 9,   7, 2)       // interior izquierdo
-    cat.fillTriangle(22, 9,  28, 9,  25, 2)       // interior derecho
-
-    // Capa 4: pecho — blanco
-    cat.fillStyle(0xffffff)
-    cat.fillEllipse(16, 36, 14, 18)               // manchón del pecho
-
-    // Capa 5: collar — rojo
-    cat.fillStyle(0xcc1111)
-    cat.fillRect(4, 21, 24, 4)                    // banda del collar
-
-    // Capa 6: ojos — amarillo iris
-    cat.fillStyle(0xf5d400)
-    cat.fillCircle(10, 15, 3)                     // ojo izquierdo
-    cat.fillCircle(22, 15, 3)                     // ojo derecho
-
-    // Capa 7: pupila vertical — negro (forma de ranura de gato)
-    cat.fillStyle(0x111111)
-    cat.fillEllipse(10, 15, 2, 4)                 // pupila izquierda
-    cat.fillEllipse(22, 15, 2, 4)                 // pupila derecha
-
-    // Capa 8: nariz — triangulito rosa
-    cat.fillStyle(0xff9999)
-    cat.fillTriangle(14, 19, 18, 19, 16, 22)
-
-    cat.generateTexture('cat_placeholder', 32, 48)
-    cat.destroy()
+    // waiting — 7 frames de 36x64, se activa tras 20 s sin moverse
+    this.anims.create({
+      key: 'waiting',
+      frames: this.anims.generateFrameNumbers('waiting', { start: 0, end: 6 }),
+      frameRate: 8,
+      repeat: -1,
+    })
   }
 
   // ─── Crear plataformas ────────────────────────────────────────────────────
@@ -127,6 +97,7 @@ export class WorldScene extends Phaser.Scene {
     const { width, height } = this.scale
 
     this.createTextures()
+    this.createAnimations()
 
     // Mundo con bounds para que el player no salga
     this.physics.world.setBounds(0, 0, LEVEL_WIDTH, height)
